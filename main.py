@@ -85,35 +85,34 @@ pos = [shark_x, shark_y]
 dead=False
 shark_img = shark_img_r
 shark_rect = shark_img_r_rect
-while(dead==False):
+
+while dead != True:
+
+    keys = pygame.key.get_pressed()
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             dead = True
 
-    keys = pygame.key.get_pressed()
+        elif event.type == KEYDOWN:
+            if event.key == K_RIGHT:
+                shark_img = shark_img_r
+                shark_rect = shark_img_r_rect
 
-    pos[0] += keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]
-    pos[1] += keys[pygame.K_DOWN] - keys[pygame.K_UP]
+            elif event.key == K_LEFT:
+                shark_img = shark_img_l
+                shark_rect = shark_img_l_rect
+            
+            elif event.key == K_UP:
+                shark_img = shark_img_u
+                shark_rect = shark_img_u_rect
 
-    if event.type == KEYDOWN:
-        if event.key == K_RIGHT:
-            shark_img = shark_img_r
-            shark_rect = shark_img_r_rect
+            elif event.key == K_DOWN:
+                shark_img = shark_img_d
+                shark_rect = shark_img_d_rect
 
-        elif event.key == K_LEFT:
-            shark_img = shark_img_l
-            shark_rect = shark_img_l_rect
-        
-        elif event.key == K_UP:
-            shark_img = shark_img_u
-            shark_rect = shark_img_u_rect
-
-        elif event.key == K_DOWN:
-            shark_img = shark_img_d
-            shark_rect = shark_img_d_rect
-
-        i = 0
-
+    pos[0] += keys[K_RIGHT] - keys[K_LEFT]
+    pos[1] += keys[K_DOWN] - keys[K_UP]
     screen.blit(background_image, [0, 0])
     screen.blit(shark_img, pos)
     i = 0
