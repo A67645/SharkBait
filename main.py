@@ -24,6 +24,15 @@ pygame.init()
 window_width=1009 #612
 window_height=720 #437
 
+# Score
+score_value = 0
+font = pygame.font.Font('Canterbury.ttf', 32)
+(sb_x, sb_y) = (10, 10)
+
+def show_score(x, y):
+    score = font.render(f"Score: {str(score_value)}", True, (0, 0, 0))
+    screen.blit(score, (x, y))
+
 step=10
 clock_tick_rate=120
 
@@ -214,17 +223,20 @@ while dead != True:
 
     for rect in fish_rects:
         if pygame.Rect.colliderect(rect, shark_rect):
-            print("\n!!!COLLISON!!!\n")
+            (fish_x, fish_y) = (randint(0, window_width-15), randint(0, window_height-15))
+            # print("\n!!!COLLISON!!!\n")
             index = fish_rects.index(rect)
-            fish_rects.pop(index)
-            fish_imgs.pop(index)
-            fish_coords.pop(index)
-            fish_num-=1
+            #fish_rects.pop(index)
+            #fish_imgs.pop(index)
+            #fish_coords.pop(index)
+            #fish_num-=1
+            score_value +=1
 
     i = 0
     while i < fish_num:
         screen.blit(fish_imgs[i], fish_coords[i])
         i+=1
 
+    show_score(sb_x, sb_y)
     pygame.display.flip()
     clock.tick(clock_tick_rate)
