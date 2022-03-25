@@ -60,43 +60,36 @@ shark_y = window_height//2
 shark_img_pre_l = pygame.image.load('img_nobg/shark_model_left.png')
 shark_img_l = pygame.transform.rotozoom(shark_img_pre_l, 0, 0.1)
 shark_img_l.convert_alpha()
-shark_img_l_rect = shark_img_l.get_rect()
 
 # Load Shark Up
 shark_img_pre_u = pygame.image.load('img_nobg/shark_model_up.png')
 shark_img_u = pygame.transform.rotozoom(shark_img_pre_u, 0, 0.1)
 shark_img_u.convert_alpha()
-shark_img_u_rect = shark_img_u.get_rect()
 
 # Load Shark Down
 shark_img_pre_d = pygame.image.load('img_nobg/shark_model_down.png')
 shark_img_d = pygame.transform.rotozoom(shark_img_pre_d, 0, 0.1)
 shark_img_d.convert_alpha()
-shark_img_d_rect = shark_img_d.get_rect()
 
 # Load Shark Up Right
 shark_img_pre_ur = pygame.image.load('img_nobg/shark_model_up_right.png')
 shark_img_ur = pygame.transform.rotozoom(shark_img_pre_ur, 0, 0.14)
 shark_img_ur.convert_alpha()
-shark_img_ur_rect = shark_img_ur.get_rect()
 
 # Load Shark Up Left
 shark_img_pre_ul = pygame.image.load('img_nobg/shark_model_up_left.png')
 shark_img_ul = pygame.transform.rotozoom(shark_img_pre_ul, 0, 0.14)
 shark_img_ul.convert_alpha()
-shark_img_ul_rect = shark_img_ul.get_rect()
 
 # Load Shark Down Right
 shark_img_pre_dr = pygame.image.load('img_nobg/shark_model_down_right.png')
 shark_img_dr = pygame.transform.rotozoom(shark_img_pre_dr, 0, 0.14)
 shark_img_dr.convert_alpha()
-shark_img_dr_rect = shark_img_dr.get_rect()
 
 # Load Shark Down Left
 shark_img_pre_dl = pygame.image.load('img_nobg/shark_model_down_left.png')
 shark_img_dl = pygame.transform.rotozoom(shark_img_pre_dl, 0, 0.14)
 shark_img_dl.convert_alpha()
-shark_img_dl_rect = shark_img_dl.get_rect()
 
 # Load Fishes
 fish_num = 5
@@ -118,10 +111,14 @@ while i < fish_num:
 # Game Loop
 pos = [shark_x, shark_y]
 dead=False
-shark_img = shark_img_r
+shark_img_last = shark_img_r
+shark_img = shark_img_last
 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
 while dead != True:
+
+    shark_img = shark_img_last
+    shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
     keys = pygame.key.get_pressed()
 
@@ -132,85 +129,105 @@ while dead != True:
         elif event.type == KEYDOWN:
 
             if event.key == K_RIGHT:
-                shark_img = shark_img_r
+                shark_img_last = shark_img_r
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_LEFT:
-                shark_img = shark_img_l
+                shark_img_last = shark_img_l
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
             
             elif event.key == K_UP:
-                shark_img = shark_img_u
+                shark_img_last = shark_img_u
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_DOWN:
-                shark_img = shark_img_d
+                shark_img_last = shark_img_d
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             if event.key == K_UP and keys[K_RIGHT] != False:
-                shark_img = shark_img_ur
+                shark_img_last = shark_img_ur
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_UP and keys[K_LEFT] != False:
-                shark_img = shark_img_ul
+                shark_img_last = shark_img_ul
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_DOWN and keys[K_RIGHT] != False:
-                shark_img = shark_img_dr
+                shark_img_last = shark_img_dr
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_DOWN and keys[K_LEFT] != False:
-                shark_img = shark_img_dl
+                shark_img_last = shark_img_dl
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_RIGHT and keys[K_UP] != False:
-                shark_img = shark_img_ur
+                shark_img_last = shark_img_ur
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_LEFT and keys[K_UP] != False:
-                shark_img = shark_img_ul
+                shark_img_last = shark_img_ul
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_RIGHT and keys[K_DOWN] != False:
-                shark_img = shark_img_dr
+                shark_img_last = shark_img_dr
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_LEFT and keys[K_DOWN] != False:
-                shark_img = shark_img_dl
+                shark_img_last = shark_img_dl
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
         if event.type == KEYUP:
 
             if event.key == K_LEFT and keys[K_UP] != False:
-                shark_img = shark_img_u
+                shark_img_last = shark_img_u
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_UP and keys[K_LEFT] != False:
-                shark_img = shark_img_l
+                shark_img_last = shark_img_l
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_UP and keys[K_RIGHT] != False:
-                shark_img = shark_img_r
+                shark_img_last = shark_img_r
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_RIGHT and keys[K_UP] != False:
-                shark_img = shark_img_u
+                shark_img_last = shark_img_u
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_DOWN and keys[K_LEFT] != False:
-                shark_img = shark_img_l
+                shark_img_last = shark_img_l
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_LEFT and keys[K_DOWN] != False:
-                shark_img = shark_img_d
+                shark_img_last = shark_img_d
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_DOWN and keys[K_RIGHT] != False:
-                shark_img = shark_img_r
+                shark_img_last = shark_img_r
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 
             elif event.key == K_RIGHT and keys[K_DOWN] != False:
-                shark_img = shark_img_d
+                shark_img_last = shark_img_d
+                shark_img = shark_img_last
                 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
             
     if (pos[0] + keys[K_RIGHT] - keys[K_LEFT] > 0 and pos[0] + keys[K_RIGHT] - keys[K_LEFT] < window_width-shark_img.get_width()):
@@ -224,12 +241,11 @@ while dead != True:
     for rect in fish_rects:
         if pygame.Rect.colliderect(rect, shark_rect):
             (fish_x, fish_y) = (randint(0, window_width-15), randint(0, window_height-15))
-            # print("\n!!!COLLISON!!!\n")
+            
             index = fish_rects.index(rect)
-            #fish_rects.pop(index)
-            #fish_imgs.pop(index)
-            #fish_coords.pop(index)
-            #fish_num-=1
+            
+            fish_rects[index] = fish_imgs[index].get_rect(x=fish_x, y=fish_y)
+            fish_coords[index] = [fish_x, fish_y]
             score_value +=1
 
     i = 0
