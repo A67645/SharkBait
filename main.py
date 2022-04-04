@@ -1,4 +1,5 @@
 # Import pygame
+from cmath import sqrt
 import pygame
 from pygame.locals import *
 
@@ -127,6 +128,7 @@ def game_loop():
     shark_img_last = shark_img_r
     shark_img = shark_img_last
     shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
+    shark_margin = shark_img.get_width()
     set_title("Shark Bait")
     load_fishes()
     while dead != True:
@@ -244,9 +246,9 @@ def game_loop():
                     shark_img = shark_img_last
                     shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
             
-        if (pos[0] + keys[K_RIGHT] - keys[K_LEFT] > 0 and pos[0] + keys[K_RIGHT] - keys[K_LEFT] < window_width-shark_img.get_width()):
+        if (pos[0] + keys[K_RIGHT] - keys[K_LEFT] > 0 and pos[0] + keys[K_RIGHT] - keys[K_LEFT] < window_width-shark_margin):
             pos[0] += keys[K_RIGHT] - keys[K_LEFT]
-        if (pos[1] + keys[K_DOWN] - keys[K_UP] > 0 and pos[1] + keys[K_DOWN] - keys[K_UP] < window_height-shark_img.get_height()):
+        if (pos[1] + keys[K_DOWN] - keys[K_UP] > 0 and pos[1] + keys[K_DOWN] - keys[K_UP] < window_height-shark_margin):
             pos[1] += keys[K_DOWN] - keys[K_UP]
     
         screen.blit(background_image, [0, 0])
