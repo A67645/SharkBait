@@ -61,14 +61,14 @@ class Server:
     def main(self):
         while True:
             # fishes: {index : [posX, posY], ...}
-            # players : { index : [posX, posY, score, orientation]}     
+            # players : { index : [posX, posY, score, orientation]} 
             JSON_string = json.dumps(self.get_dict())
             # Create ipv6 datagram socket
             sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
             # Allow own messages to be sent back (for local testing)
             sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_MULTICAST_LOOP, True)
             sock.sendto(JSON_string.encode('utf-8'), ("ff02::abcd:1", 8080))
-            time.sleep(3)
+
 
 dict = {
     "fishes" : {},
