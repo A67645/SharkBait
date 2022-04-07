@@ -13,7 +13,7 @@ class Server:
     window_map = {}
     window_width=1009 #612
     window_height=720 #437
-    clock_tick_rate = 30
+    clock_tick_rate = 1
     shark_rects = {}
     fish_rects = {}
     fish_num = 5
@@ -191,7 +191,6 @@ class Server:
         self.gen_fishes()
         self.add_player()
         self.add_player()
-        self.window_map["players"][0] = [800, 600, 0, 8]
         running = True
         while running:
             self.send()

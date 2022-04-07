@@ -138,7 +138,7 @@ class SharkBait:
         self.show_scores()
 
         pygame.display.flip()
-        self.clock.tick(30)
+        self.clock.tick(1)
 
     def main(self):
         dict = {}
