@@ -135,6 +135,8 @@ fishes.load()
 pos = [shark_x, shark_y]
 shark_img_last = shark_img_r
 shark_img = shark_img_last
+print(img_dict["right"].get_width())
+print(img_dict["right"].get_heigth())
 shark_rect = shark_img.get_rect(x=pos[0], y=pos[1])
 player = Player(pos, shark_img_last, shark_img, shark_rect, img_dict, screen)
 while player.getDead() != True:

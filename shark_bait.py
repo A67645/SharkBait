@@ -30,6 +30,7 @@ class SharkBait:
     screen = pygame.display.set_mode((1009, 720))
     clock = pygame.time.Clock()
     img_dict = {}
+    orientation = [1]
     font = pygame.font.Font('Canterbury.ttf', 32)
     sb_x = 10
     sb_y = 10
@@ -143,10 +144,82 @@ class SharkBait:
         dict = {}
         list = {}
         client = multiplayer_client.Client(dict, list)
-        while True:
+        running = True
+        while running:
             client.receive()
             self.set_window_map(client.get_receive_buffer())
             self.draw()
+            keys = pygame.key.get_pressed()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+                elif event.type == KEYDOWN:
+
+                    if event.key == K_RIGHT:
+                        self.orientation[0] = 1
+
+                    elif event.key == K_LEFT:
+                        self.orientation[0] = 5
+            
+                    elif event.key == K_UP:
+                        self.orientation[0] = 7
+
+                    elif event.key == K_DOWN:
+                        self.orientation[0] = 3
+
+                    if event.key == K_UP and keys[K_RIGHT] != False:
+                        self.orientation[0] = 8
+
+                    elif event.key == K_UP and keys[K_LEFT] != False:
+                        self.orientation[0] = 6
+               
+                    elif event.key == K_DOWN and keys[K_RIGHT] != False:
+                        self.orientation[0] = 2
+
+                    elif event.key == K_DOWN and keys[K_LEFT] != False:
+                        self.orientation[0] = 4
+
+                    elif event.key == K_RIGHT and keys[K_UP] != False:
+                        self.orientation[0] = 8
+
+                    elif event.key == K_LEFT and keys[K_UP] != False:
+                        self.orientation[0] = 6
+
+                    elif event.key == K_RIGHT and keys[K_DOWN] != False:
+                        self.orientation[0] = 2
+
+                    elif event.key == K_LEFT and keys[K_DOWN] != False:
+                        self.orientation[0] = 4
+
+                if event.type == KEYUP:
+
+                    if event.key == K_LEFT and keys[K_UP] != False:
+                        self.orientation[0] = 7
+
+                    elif event.key == K_UP and keys[K_LEFT] != False:
+                        self.orientation[0] = 5
+
+                    elif event.key == K_UP and keys[K_RIGHT] != False:
+                        self.orientation[0] = 1
+
+                    elif event.key == K_RIGHT and keys[K_UP] != False:
+                        self.orientation[0] = 7
+
+                    elif event.key == K_DOWN and keys[K_LEFT] != False:
+                        self.orientation[0] = 5
+
+                    elif event.key == K_LEFT and keys[K_DOWN] != False:
+                        self.orientation[0] = 3
+
+                    elif event.key == K_DOWN and keys[K_RIGHT] != False:
+                        self.orientation[0] = 1
+
+                    elif event.key == K_RIGHT and keys[K_DOWN] != False:
+                        self.orientation[0] = 3
+
+            client.set_send_buffer(self.orientation)
+            client.send()
 
 wm = {}
 
