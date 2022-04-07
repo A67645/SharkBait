@@ -8,6 +8,7 @@ class Client():
 
     receive_buffer = {}
     send_buffer = []
+    sock_unicast = None
     sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 
     def __init__(self, dict, list):
@@ -58,4 +59,7 @@ class Client():
 
     #parte que envia ao servidor as coordenadas e orientação
     def send(self):
-        return
+        JSON_string = json.dumps(self.send_buffer)
+        utf8 = JSON_string.encode('utf-8')
+        host,port = ('::1', 6666) # '2001:0::10'
+        self.sock_unicast.sendto(utf8.encode('utf-8'), (host,port))

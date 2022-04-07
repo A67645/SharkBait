@@ -3,6 +3,7 @@ import socket
 import json
 from random import seed
 from random import randint
+import threading
 import time
 from turtle import window_width
 import pygame
@@ -10,6 +11,9 @@ from pygame.locals import *
 
 class Server:
 
+    conns = {
+        'addresses': {}
+    }
     window_map = {}
     window_width=1009 #612
     window_height=720 #437
@@ -49,25 +53,26 @@ class Server:
         self.fish_rects[fish_index] = fish_img.get_rect(x=fish_x, y=fish_y)
 
     # adds new player to the window map with default values: coords
-    def add_player(self):
+    def add_player(self, addr):
         size = len(self.window_map["players"].keys())
         self.window_map["players"][size + 1] = [360,504, 0, 1]
         shark_img_pre_r = pygame.image.load('img_nobg/shark_model_right.png')
         shark_img_r = pygame.transform.rotozoom(shark_img_pre_r, 0, 0.1)
         shark_img_r.convert_alpha()
+        self.conns["addresses"][size + 1] = addr
         self.shark_rects[size + 1] = shark_img_r.get_rect(x=360, y=504)
 
     def update_player_score(self, player_index):
-        self.window_map["players"][2] += 1
+        self.window_map["players"][player_index][2] += 1
 
     def logout_player(self, player_index):
         i = 1
-        dict = {}
-        for key, value in self.window_map["players"]:
-            if (player_index != i):
-                dict[i] = value
+        for key in self.window_map["players"]:
+            value = self.window_map["players"][key]
+            if (player_index == i):
+                self.window_map["players"].pop(key)
+                self.conns["addresses"].pop(key)
                 i += 1
-        self.window_map = dict
 
     def get_dict(self):
         return self.window_map
@@ -161,6 +166,9 @@ class Server:
                 self.shark_rects[index] = shark_img_dl.get_rect(x=posX - 10, y=posY + 10)
                 side = 4
 
+        elif(orientation == 10):
+            return
+
         self.window_map["players"][index][3] = side
         self.eat_fish(index)
 
@@ -175,10 +183,23 @@ class Server:
         sock.sendto(JSON_string.encode('utf-8'), ("ff02::abcd:1", 8080))
 
     def receive(self):
-        return
+        sock_unicast = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+        host,port = ('::1', 6666) # '2001:0::10'
+        sock_unicast.bind((host,port))
+        data,addr = sock_unicast.recvfrom(2048)
+
+        if addr[0] not in list(self.conns["addresses"].values()):
+            self.add_player(addr[0])
+
+        JSON_string = data.decode('utf-8')
+        orientation = json.loads(JSON_string)
+        self.move_player(orientation)
 
 
     def main(self):
+        #unicast = threading.Thread(target=self.receive, args=())
+        #unicast.start()
+        #unicast.join()
         pygame.init()
         # Open a window
         size = (1009, 720)
@@ -189,10 +210,11 @@ class Server:
 
         clock = pygame.time.Clock() 
         self.gen_fishes()
-        self.add_player()
-        self.add_player()
+        self.add_player('::1')
+        self.add_player('::2')
         running = True
         while running:
+            self.receive()
             self.send()
             self.move_player(1, 7)
             for event in pygame.event.get():

@@ -148,7 +148,6 @@ class SharkBait:
         while running:
             client.receive()
             self.set_window_map(client.get_receive_buffer())
-            print(self.window_map)
             self.draw()
             keys = pygame.key.get_pressed()
             for event in pygame.event.get():
@@ -193,7 +192,7 @@ class SharkBait:
                     elif event.key == K_LEFT and keys[K_DOWN] != False:
                         self.orientation[0] = 4
 
-                if event.type == KEYUP:
+                elif event.type == KEYUP:
 
                     if event.key == K_LEFT and keys[K_UP] != False:
                         self.orientation[0] = 7
@@ -218,6 +217,9 @@ class SharkBait:
 
                     elif event.key == K_RIGHT and keys[K_DOWN] != False:
                         self.orientation[0] = 3
+
+                else:
+                    self.orientation[0] = 10
 
             client.set_send_buffer(self.orientation)
             client.send()
