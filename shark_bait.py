@@ -148,6 +148,7 @@ class SharkBait:
         while running:
             client.receive()
             self.set_window_map(client.get_receive_buffer())
+            print(self.window_map)
             self.draw()
             keys = pygame.key.get_pressed()
             for event in pygame.event.get():
