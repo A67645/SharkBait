@@ -1,24 +1,26 @@
+import json
 import socket
-
+import time
 
 class Client():
-    sock_unicast = None
-    sock_multicast = None
+    sock = None
 
     def __init__(self):
-        self.sock_unicast = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+        self.sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+        host,port = ('::1', 6666) # '2001:0::10'
+        self.sock.connect((host,port))
 
     def send(self, msg):
-        host,port = ('::1', 6666) # '2001:0::10'
-        self.sock_unicast.sendto(msg.encode('utf-8'), (host,port))
+        self.sock.send(msg.encode('utf-8'))
 
     def main(self):
         self.send('hello')
         while True:
-            s = input()
-            self.send(s)
+            self.send('second')
+            time.sleep(3)
 
-    
+            data,addr = self.sock.recvfrom(2048)
+            print(json.loads(data.decode('utf-8')),addr)
 
 client = Client()
 client.main()
