@@ -4,7 +4,6 @@ import socket
 import threading
 import pygame
 from pygame.locals import *
-import time
 
 class Server():
     conns = {

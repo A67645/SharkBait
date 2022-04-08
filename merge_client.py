@@ -1,6 +1,5 @@
 import json
 import socket
-import time
 
 class Client():
     window_map = {
