@@ -12,7 +12,7 @@ from pygame.locals import *
 class Server:
 
     conns = {
-        'addresses': {}
+        'addresses': {1 : '::1'}
     }
     window_map = {}
     window_width=1009 #612
@@ -84,6 +84,9 @@ class Server:
                 self.window_map["players"][index][2] += 1
 
     def move_player(self, index, orientation):
+
+        if(len(self.window_map["players"].keys()) == 0):
+            return
 
         posX = self.window_map["players"][index][0]
         posY = self.window_map["players"][index][1]
@@ -182,8 +185,9 @@ class Server:
         sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_MULTICAST_LOOP, True)
         sock.sendto(JSON_string.encode('utf-8'), ("ff02::abcd:1", 8080))
 
-    def receive(self):
+    def receive_unicast(self):
         sock_unicast = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+        sock_unicast.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         host,port = ('::1', 6666) # '2001:0::10'
         sock_unicast.bind((host,port))
         data,addr = sock_unicast.recvfrom(2048)
@@ -193,13 +197,25 @@ class Server:
 
         JSON_string = data.decode('utf-8')
         orientation = json.loads(JSON_string)
-        self.move_player(orientation)
+        self.move_player(1, orientation)
+        #print(orientation)
+        sock_unicast.close()
+
+    def send_unicast(self):
+        sock_unicast = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+        sock_unicast.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        #sock_unicast.bind((host,port))
+        JSON_string = json.dumps(self.window_map)
+        utf8 = JSON_string.encode('utf-8')
+        host,port = ('::1', 6666) # '2001:0::10'
+        sock_unicast.sendto(utf8, (host,port))
 
 
     def main(self):
-        #unicast = threading.Thread(target=self.receive, args=())
+        #unicast = threading.Thread(target=self.receive_unicast, args=())
         #unicast.start()
         #unicast.join()
+
         pygame.init()
         # Open a window
         size = (1009, 720)
@@ -210,18 +226,18 @@ class Server:
 
         clock = pygame.time.Clock() 
         self.gen_fishes()
-        self.add_player('::1')
-        self.add_player('::2')
+
         running = True
         while running:
-            self.receive()
-            self.send()
-            self.move_player(1, 7)
+            self.receive_unicast()
+            self.send_unicast()
+  
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
             pygame.display.flip()
             clock.tick(self.clock_tick_rate)
+
             
 dict = {
     "fishes" : {},

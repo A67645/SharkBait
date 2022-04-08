@@ -22,16 +22,14 @@ from pygame.locals import (
 
 class SharkBait:
 
-    pygame.init()
-
     window_map = {"fishes" : {}, "players" : {}}
     window_width = 1009
     window_height = 720
-    screen = pygame.display.set_mode((1009, 720))
-    clock = pygame.time.Clock()
+    screen = None
+    clock = None
     img_dict = {}
     orientation = [1]
-    font = pygame.font.Font('Canterbury.ttf', 32)
+    font = None
     sb_x = 10
     sb_y = 10
 
@@ -39,6 +37,7 @@ class SharkBait:
         self.window_map = wm
         self.window_width = ww
         self.window_height = wh
+        pygame.init()
         self.screen = pygame.display.set_mode((ww, wh))
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font('Canterbury.ttf', 32)
@@ -143,12 +142,13 @@ class SharkBait:
     def main(self):
         dict = {}
         list = {}
+        self.window_map = { "fishes" : {1 : [140,120], 2 : [440,220], 3 : [335,127], 4 : [240,620], 5 : [344,523]},
+             "players" : {1 : [100,200,0, 1], 2 : [155,255,0, 1]}
+           }
         client = multiplayer_client.Client(dict, list)
+        #print("Client Created")
         running = True
         while running:
-            client.receive()
-            self.set_window_map(client.get_receive_buffer())
-            self.draw()
             keys = pygame.key.get_pressed()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -222,10 +222,14 @@ class SharkBait:
                     self.orientation[0] = 10
 
             client.set_send_buffer(self.orientation)
-            client.send()
+            client.send_unicast()
+            client.receive_unicast()
+            self.set_window_map(client.get_receive_buffer())
+            self.draw()
 
-wm = {}
-
+wm = { "fishes" : {1 : [140,120], 2 : [440,220], 3 : [335,127], 4 : [240,620], 5 : [344,523]},
+             "players" : {1 : [100,200,0, 1], 2 : [155,255,0, 1]}
+           }
 game = SharkBait(wm, 1009, 720, 10, 10)
 game.main()
         
