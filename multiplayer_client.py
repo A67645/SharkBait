@@ -2,13 +2,11 @@
 import socket
 import struct
 import json
-import time
 
 class Client():
 
     receive_buffer = {}
     send_buffer = []
-    sock_unicast = None
     sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 
     def __init__(self, dict, list):
@@ -55,11 +53,30 @@ class Client():
         JSON_string = json.loads(utf8_string)
 
         self.load_receive_buffer(JSON_string)
+
+    def receive_unicast(self):
+        sock_unicast = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+        sock_unicast.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        host,port = ('::1', 6666) # '2001:0::10'
+        sock_unicast.bind((host,port))
+        data,addr = sock_unicast.recvfrom(2048)
+
+        JSON_string = data.decode('utf-8')
+        window = json.loads(JSON_string)
+        self.receive_buffer = window
+        #print(self.receive_buffer)
+        sock_unicast.close()
         
 
     #parte que envia ao servidor as coordenadas e orientação
-    def send(self):
+    def send_unicast(self):
+        sock_unicast = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+        sock_unicast.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        host,port = ('::1', 6666) # '2001:0::10'
+        #sock_unicast.bind((host,port))
         JSON_string = json.dumps(self.send_buffer)
         utf8 = JSON_string.encode('utf-8')
         host,port = ('::1', 6666) # '2001:0::10'
-        self.sock_unicast.sendto(utf8.encode('utf-8'), (host,port))
+        sock_unicast.sendto(utf8, (host,port))
+
+
