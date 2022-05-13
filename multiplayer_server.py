@@ -216,7 +216,7 @@ class Server:
         #unicast.start()
         #unicast.join()
 
-        pygame.init()
+        #pygame.init()
         # Open a window
         size = (1009, 720)
         screen = pygame.display.set_mode(size)
@@ -225,18 +225,20 @@ class Server:
         pygame.display.set_caption("Shark Bait")
 
         clock = pygame.time.Clock() 
+
         self.gen_fishes()
 
         running = True
         while running:
             self.receive_unicast()
             self.send_unicast()
-  
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
             pygame.display.flip()
             clock.tick(self.clock_tick_rate)
+
 
             
 dict = {

@@ -78,5 +78,12 @@ class Client():
         utf8 = JSON_string.encode('utf-8')
         host,port = ('::1', 6666) # '2001:0::10'
         sock_unicast.sendto(utf8, (host,port))
+"""
+rb = {}
+sb = [1]
+client = Client(rb, sb)
+while True:
+    client.receive_unicast()
+    client.send_unicast()
 
-
+"""
