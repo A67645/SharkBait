@@ -48,7 +48,7 @@ class HelloSender(Thread):
 
                 # Messagem a ser enviada
             self.msg = {
-                "type": "HELLO",
+                "type": "Request",
                 "source": self.localhost
             }
 

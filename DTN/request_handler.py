@@ -20,7 +20,7 @@ class Receive_Handler(Thread):
         try:
             self.lock.acquire()
             self.hello_handler()
-            '''
+
             if self.msg["type"] == "HELLO":
                 self.lock.acquire()
                 self.hello_handler()
@@ -28,7 +28,7 @@ class Receive_Handler(Thread):
             else:
                 self.lock.aquire()
                 self.send_data()
-            '''
+        
         except Exception as e:
             print(e.with_traceback())    
               
