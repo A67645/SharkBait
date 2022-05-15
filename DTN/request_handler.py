@@ -18,16 +18,16 @@ class Receive_Handler(Thread):
     
     def run(self):
         try:
-            self.lock.acquire()
-            self.hello_handler()
-
-            if self.msg["type"] == "HELLO":
+            if self.msg["type"] == "Request":
                 self.lock.acquire()
                 self.hello_handler()
-
-            else:
-                self.lock.aquire()
                 self.send_data()
+
+            elif self.msg["type"] == "Reply":
+                self.lock.acquire()
+                if self.msg["source"]==self.localhost:
+                    print("recebi do servidor")
+                
         
         except Exception as e:
             print(e.with_traceback())    
@@ -37,7 +37,8 @@ class Receive_Handler(Thread):
 
 
     def send_data(self):
-        send_data.send(self.msg['data'], self.localhost, self.mcast_port)
+        self.msg['type'] = "Reply"
+        send_data.send(self.msg, self.localhost, self.mcast_port)
 
     def hello_handler(self):
         test_print = self.msg['type'] + " from: " + self.msg['source']
