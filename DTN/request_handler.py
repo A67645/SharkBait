@@ -27,6 +27,9 @@ class Receive_Handler(Thread):
                 self.lock.acquire()
                 if self.msg["source"]==self.localhost:
                     print("recebi do servidor")
+                else:
+                    self.hello_handler()
+                    self.send_data()
                 
         
         except Exception as e:

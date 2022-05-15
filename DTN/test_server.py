@@ -22,11 +22,11 @@ class Server():
 
             msg = json.loads(message)
 
-            msg['type'] = 'reply'
+            msg['type'] = 'Reply'
 
-            print("received message from host" + msg['src'])
+            print("received message from host" + msg['source'])
 
-            message = json.dump(msg)
+            message = json.dumps(msg)
 
             self.send(addr, message)
 

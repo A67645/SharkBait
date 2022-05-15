@@ -7,6 +7,7 @@ def get_ip():
         ipv6 = netifaces.ifaddresses('eth0')
         
         return ipv6[netifaces.AF_INET6][0]['addr']
+        return '::1'
 
 def main():
     localhost = get_ip()
