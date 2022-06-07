@@ -1,10 +1,13 @@
 import json
 import socket
 import threading
+from threading import Thread 
 import struct
 import time
 
-class Router():
+from hello_router import Hello
+
+class Router(Thread):
 
     unicast_socket = None
     
@@ -30,13 +33,11 @@ class Router():
 
         msg = data.decode('utf-8')
 
-        message = json.loads(msg)
+        message = json.loads(msg) 
 
         src = message["src"]
 
-        self.cache[src] = addr
-
-        print(self.cache)
+        self.cache[src] = addr         
 
         return message
 
@@ -50,14 +51,19 @@ class Router():
 
         while True:
             message_host = self.receive_from_host()
-            self.send_to_server(message_host)
-            message_server = self.receive_from_server()
-            self.send_to_host(message_server)
+
+            if message_host["type"] == "DATA REQUEST":
+                self.send_to_server(message_host)
+                message_server = self.receive_from_server()
+                self.send_to_host(message_server)
+
     
     def main(self):
-        handler = threading.Thread(target=self.handle, args=())
-        handler.start()
-        handler.join()
+        hello = Hello()
+        hello.start()
+        #handler = threading.Thread(target=self.handle, args=())
+        #handler.start()
+        #handler.join()
 
 router = Router()
 router.main()
