@@ -3,6 +3,7 @@ import socket
 import threading
 from threading import Thread, RLock
 import struct
+import ifaces
 
 class Hello(Thread):
 
@@ -19,7 +20,7 @@ class Hello(Thread):
         # Unicast Socket
         self.uni_sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.uni_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.uni_sock.bind(('', 5555))
+        self.uni_sock.bind((ifaces.get_ip_router('eth0'), 5555))
 
         # Multicast Socket
         self.multi_sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
