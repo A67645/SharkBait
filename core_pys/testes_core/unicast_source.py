@@ -1,14 +1,16 @@
 import socket
 import json
 import time
+from threading import Thread
 
 class source():
 
     def __init__(self):
+        Thread.__init__(self)
         # class variables definition
         self.serverIP = "2001:0::10"
         self.hostIP = "2001:6::22"
-        self.nextHop = '2001:6::20'
+        self.nextHop = ()
         self.pos = (0,0)
         self.message = {"src" : self.hostIP, "dst" : self.hostIP, "type" : "DATA REQUEST", "data" : self.pos}
         # unicast socket definition
@@ -26,7 +28,7 @@ class source():
         print("RESPONSE:")
         print(message)
 
-    def main(self):
+    def run(self):
         while True:
             self.uni_sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
             host,port = ('', 5555) # '2001:0::10'
@@ -37,5 +39,5 @@ class source():
             #time.sleep(2)
             self.receive()
 
-source = source()
-source.main()
+#source = source()
+#source.main()
