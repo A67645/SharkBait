@@ -10,8 +10,8 @@ node n1 {
 	!
     }
     canvas c1
-    iconcoords {465.0 164.0}
-    labelcoords {465.0 196.0}
+    iconcoords {759.0 633.0}
+    labelcoords {759.0 665.0}
     interface-peer {eth0 n9}
 }
 
@@ -27,8 +27,8 @@ node n2 {
 	!
     }
     canvas c1
-    iconcoords {591.0 242.0}
-    labelcoords {591.0 274.0}
+    iconcoords {907.0 633.0}
+    labelcoords {907.0 665.0}
     interface-peer {eth0 n9}
 }
 
@@ -44,8 +44,8 @@ node n3 {
 	!
     }
     canvas c1
-    iconcoords {583.0 104.0}
-    labelcoords {583.0 136.0}
+    iconcoords {912.0 436.0}
+    labelcoords {912.0 468.0}
     interface-peer {eth0 n9}
 }
 
@@ -69,8 +69,8 @@ node n4 {
 	!
     }
     canvas c1
-    iconcoords {391.0 154.0}
-    labelcoords {391.0 186.0}
+    iconcoords {765.0 520.0}
+    labelcoords {765.0 552.0}
     interface-peer {eth0 n6}
     interface-peer {eth1 n5}
     interface-peer {eth2 n9}
@@ -96,8 +96,8 @@ node n5 {
 	!
     }
     canvas c1
-    iconcoords {277.0 24.0}
-    labelcoords {277.0 56.0}
+    iconcoords {622.0 74.0}
+    labelcoords {622.0 106.0}
     interface-peer {eth0 n7}
     interface-peer {eth1 n6}
     interface-peer {eth2 n4}
@@ -123,8 +123,8 @@ node n6 {
 	!
     }
     canvas c1
-    iconcoords {279.0 312.0}
-    labelcoords {279.0 344.0}
+    iconcoords {131.0 521.0}
+    labelcoords {131.0 553.0}
     interface-peer {eth0 n5}
     interface-peer {eth1 n7}
     interface-peer {eth2 n4}
@@ -150,8 +150,8 @@ node n7 {
 	!
     }
     canvas c1
-    iconcoords {169.0 166.0}
-    labelcoords {169.0 198.0}
+    iconcoords {119.0 147.0}
+    labelcoords {119.0 179.0}
     interface-peer {eth0 n8}
     interface-peer {eth1 n5}
     interface-peer {eth2 n6}
@@ -169,8 +169,8 @@ node n8 {
 	!
     }
     canvas c1
-    iconcoords {37.0 40.0}
-    labelcoords {37.0 72.0}
+    iconcoords {23.0 22.0}
+    labelcoords {23.0 54.0}
     interface-peer {eth0 n7}
 }
 
@@ -200,8 +200,8 @@ node n9 {
 	}
     }
     canvas c1
-    iconcoords {517.0 166.0}
-    labelcoords {517.0 198.0}
+    iconcoords {850.0 520.0}
+    labelcoords {850.0 552.0}
     interface-peer {e0 n1}
     interface-peer {e1 n2}
     interface-peer {e2 n3}
