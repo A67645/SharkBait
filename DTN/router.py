@@ -21,7 +21,7 @@ class Router():
         self.multicast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         #multicast_socket.bind(('', 6666))
         # Allow messages from this socket to loop back for development
-        self.multicast_socket.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_MULTICAST_LOOP, True)
+        self.multicast_socket.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_MULTICAST_LOOP, False)
         # Construct message for joining multicast group
         #print(ifaces.get_ip_router('eth2'))
         #ipv6mr_interface = ipaddress.ip_address(ifaces.get_ip_router('eth2')).packed
@@ -61,7 +61,6 @@ class Router():
             message_host = self.receive_from_multicast()
             self.send_to_server(message_host)
             message_server = self.receive_from_server()
-            time.sleep(1)
             self.send_to_multicast(message_server)
 
     def main(self):

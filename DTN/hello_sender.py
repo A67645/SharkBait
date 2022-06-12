@@ -36,11 +36,12 @@ class HelloSender(Thread):
             # Criar o socket do client
             client_sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
             client_sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_MULTICAST_HOPS, self.ttl)
+            client_sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_MULTICAST_LOOP, False)
 
             return client_sock
 
         except Exception as sock_error:
-            print('Failed to create socket: {}'.format(sock_error))             
+            print('Failed to create socket: {}'.format(sock_error))
 
     def hello_sender(self):
         try:
