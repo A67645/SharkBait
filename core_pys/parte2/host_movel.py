@@ -41,9 +41,9 @@ class HelloSender(Thread):
         self.localhost      = localhost
         self.mcast_group    = mcast_group
         self.mcast_port     = mcast_port
-        self.window_width = 800
-        self.window_height = 600
-        self.screen = pygame.display.set_mode((800, 600))
+        self.window_width = 600
+        self.window_height = 400
+        self.screen = pygame.display.set_mode((600, 400))
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font('/home/core/Desktop/SharkBait/core_pys/parte2/Canterbury.ttf', 32)
         self.img_dict = {}
@@ -51,7 +51,7 @@ class HelloSender(Thread):
         self.sb_x = 10
         self.sb_y = 10
         # Load Background Image
-        self.img_dict[0] = pygame.transform.rotozoom(pygame.image.load("/home/core/Desktop/SharkBait/core_pys/parte2/ocean_background.png").convert(), 0, 1.648).convert_alpha()
+        self.img_dict[0] = pygame.transform.rotozoom(pygame.image.load("/home/core/Desktop/SharkBait/core_pys/parte2/ocean_background.png").convert(), 0, 1).convert_alpha()
 
         # Load Fish Image
         fish_img_pre = pygame.image.load('/home/core/Desktop/SharkBait/core_pys/parte2/img_nobg/fish_model.png')
@@ -132,6 +132,8 @@ class HelloSender(Thread):
             value = self.window_map["fishes"][key]
             self.screen.blit(self.img_dict[9], value)
 
+        print(f'MAPA DE JOGADORES::::{self.window_map}')
+
         for key in self.window_map["players"]:
             value = self.window_map["players"][key]
             orientation = value[3]
@@ -140,7 +142,7 @@ class HelloSender(Thread):
         self.show_scores()
 
         pygame.display.flip()
-        self.clock.tick(30)
+        self.clock.tick(2)
 
 
     def set_window_map(self, gs):
@@ -192,7 +194,6 @@ class HelloSender(Thread):
 
         finally:
             self.lock.release()
-            sleep(self.hello_interval)
             print(f'GAME MAP: {self.window_map}')
 
     def run(self):
@@ -269,7 +270,9 @@ class HelloSender(Thread):
 
                 else:
                     self.orientation[0] = 10
-            self.send_request()
+
+            if(self.orientation[0] != 10):
+                self.send_request()
             self.draw()
 #_________________________________________________________
 
@@ -283,8 +286,6 @@ class Host_Movel():
         self.mcast_port = mcast_port
         self.dead_interv = dead_interv
         self.hello_interval = hello_interval
-        #self.route_table = {}
-        #self.queue = {}
         self.lock = RLock()
         self.mcast_ttl = 1
         self.local_ip = localhost
@@ -332,7 +333,7 @@ class Host_Movel():
 
             rcv_msg = json.loads(data.decode('utf-8'))
 
-            print(f'Message of type {rcv_msg["type"]} received from {addr}')
+            print(f'Message {rcv_msg} received from {addr[0]}')
 
             #receive_handler = Receive_Handler(self.lock, rcv_msg, self.local_ip, self.mcast_group, self.mcast_port)
 
@@ -347,9 +348,7 @@ class Host_Movel():
                     if rcv_msg["destination"]!= self.local_ip:
                         self.send_data(rcv_msg)
                         print("recebi do servidor")
-                    else:
-                        self.window_map = rcv_msg["data"]
-                        print('Mensagem para mim')
+                    self.window_map = rcv_msg["data"]
 
             finally:
                 self.lock.release()
@@ -361,8 +360,6 @@ class Host_Movel():
         hello_sender = HelloSender(self.lock, self.hello_interval, self.local_ip, self.mcast_ttl, self.mcast_group, self.mcast_port)
 
         hello_sender.start()
-
-        sleep(1)
 
     def main(self):
         self.create_socket()

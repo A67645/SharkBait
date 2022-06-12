@@ -19,6 +19,8 @@ class Router():
         self.multicast_socket = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         # Allows address to be reused
         self.multicast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.ttl = self.ttl = struct.pack('@i', 1)
+        self.multicast_socket.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_MULTICAST_HOPS, self.ttl)
         #multicast_socket.bind(('', 6666))
         # Allow messages from this socket to loop back for development
         self.multicast_socket.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_MULTICAST_LOOP, False)
