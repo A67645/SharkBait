@@ -1,3 +1,4 @@
+import json
 import socket
 import struct
 from threading import Thread
@@ -7,6 +8,7 @@ from hello_sender import HelloSender
 from request_handler import Receive_Handler
 from json import dumps
 from time import sleep
+import send_data
 
 class Host_Movel(Thread):
 
@@ -37,8 +39,17 @@ class Host_Movel(Thread):
 
         # Join Multicast Group
         #member_request = struct.pack("16s15s".encode('utf-8'), socket.inet_pton(socket.AF_INET6, self.mcast_group), (chr(0) * 16).encode('utf-8'))
+        self.sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_MULTICAST_LOOP, False)
         member_request = struct.pack("16sI".encode('utf-8'), socket.inet_pton(socket.AF_INET6, self.mcast_group), socket.INADDR_ANY)
         self.sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_JOIN_GROUP, member_request)
+
+    def send_data(self,msg):
+        msg['type'] = "Reply"
+        send_data.send(json.dumps(msg.encode('utf-8')), self.local_ip, self.mcast_port)
+
+    def hello_handler(self,msg):
+        test_print = msg['type'] + " from: " + msg['source']
+        print(test_print)    
 
 
     def receive(self):
@@ -47,11 +58,34 @@ class Host_Movel(Thread):
 
         while True:
 
-            rcv_msg = self.sock.recvfrom(1024)
+            data, addr = self.sock.recvfrom(1024)
 
-            receive_handler = Receive_Handler(self.lock, rcv_msg, self.local_ip, self.mcast_group, self.mcast_port)
+            rcv_msg = json.loads(data.decode('utf-8'))
 
-            receive_handler.start()
+            #receive_handler = Receive_Handler(self.lock, rcv_msg, self.local_ip, self.mcast_group, self.mcast_port)
+
+            #receive_handler.start()
+
+            try:
+                self.lock.acquire()
+                if rcv_msg["type"] == "Request":
+                    self.lock.acquire()
+                    self.hello_handler(rcv_msg)
+                    self.send_data(rcv_msg)
+
+                elif self.msg["type"] == "Reply":
+                    self.lock.acquire()
+                    if self.msg["source"]=="2001:0::10":
+                        print("recebi do servidor")
+                    else:
+                        break
+                
+        
+            except Exception as e:
+                print(e.with_traceback())    
+              
+            finally:
+                self.lock.release()
 
 
 

@@ -25,7 +25,7 @@ class Receive_Handler(Thread):
 
             elif self.msg["type"] == "Reply":
                 self.lock.acquire()
-                if self.msg["source"]==self.localhost:
+                if self.msg["source"]=="2001:0::10":
                     print("recebi do servidor")
                 else:
                     self.hello_handler()
