@@ -2,6 +2,7 @@ import json
 import socket
 import threading
 import time
+import unicast.ifaces as ifaces
 
 class Server():
     
@@ -9,7 +10,7 @@ class Server():
 
     def __init__(self):
         self.sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
-        host,port = ('::1', 6666) # '2001:0::10'
+        host,port = ('::1', 7777) # '2001:0::10'
         self.sock.bind((host,port))
 
     def send(self,addr, message):
