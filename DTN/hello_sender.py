@@ -6,14 +6,17 @@ import socket
 
 class HelloSender(Thread):
     def __init__(self, lock, hello_interval, localhost, ttl, mcast_group, mcast_port):
-
         Thread.__init__(self)
+        self.gameState = {"fishes" : {}, "players" : {}}
         self.lock           = lock
         self.hello_interval = hello_interval
         self.ttl            = ttl
         self.localhost      = localhost
         self.mcast_group    = mcast_group
         self.mcast_port     = mcast_port
+
+    def set_gameState(self, gs):
+        self.gameState = gs
 
     def run(self):
         while True:
@@ -25,8 +28,10 @@ class HelloSender(Thread):
                 print('Failed: {}'.format(e.with_traceback()))
 
             finally:
+                self.gameState = Host_Movel.gameState
                 self.lock.release()
                 sleep(self.hello_interval)
+                print(f'GAME MAP: {self.gameState}')
 
 
 

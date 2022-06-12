@@ -2,14 +2,14 @@ import json
 import socket
 import threading
 import time
-import unicast.ifaces as ifaces
+import ifaces
 
 class Server():
 
     sock = None
 
     def __init__(self):
-        self.boardState = {"fishes" : {1 : (3.6)}, "players" : {1 : (15,15)}}
+        self.window_map = {"fishes" : {1 : (3.6)}, "players" : {1 : (15,15)}}
         self.sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
         host,port = ('', 7777) # '2001:0::10'
         self.sock.bind((host,port))
@@ -33,7 +33,7 @@ class Server():
 
             msg['source'] = '2001:0::10'
 
-            msg['data'] = self.boardState
+            msg['data'] = self.window_map
 
             message = json.dumps(msg)
 
