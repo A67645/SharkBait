@@ -37,10 +37,14 @@ class Router():
                    struct.pack('16sI', mc_address.packed, interface_index))
 
     def send_to_server(self, message):
-        self.unicast_socket.sendto(message.encode('utf-8'),('2001:0::10',7777))
+        if json.loads(message)["type"] == "Request":
+
+            self.unicast_socket.sendto(message.encode('utf-8'),('2001:0::10',7777))
+            print(f'Message {message} sent to server')
 
     def receive_from_server(self):
         data,addr = self.unicast_socket.recvfrom(2048)
+        print(f'Message {data.decode("utf-8")} received from server')
         return data.decode('utf-8')
 
     def receive_from_multicast(self):
@@ -48,12 +52,16 @@ class Router():
         # Receive message from multicast group
         data, addr = self.multicast_socket.recvfrom(2048)
 
-        print(data.decode('utf-8'))
+        print(f'Message {data.decode("utf-8")} received from multicast at {addr}')
 
         return data.decode('utf-8')
 
     def send_to_multicast(self, message):
-        self.multicast_socket.sendto(message.encode('utf-8'), ("ff02::abcd:1", 6666))
+
+        if json.loads(message)["type"] == "Reply":
+            self.multicast_socket.sendto(message.encode('utf-8'), ("ff02::abcd:1", 6666))
+
+            print(f'Message {message} sent to Multicast Group')
 
     def handle(self):
 

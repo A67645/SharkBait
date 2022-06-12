@@ -1,3 +1,4 @@
+import json
 import socket
 import struct
 from threading import Thread
@@ -7,6 +8,8 @@ from hello_sender import HelloSender
 from request_handler import Receive_Handler
 from json import dumps
 from time import sleep
+import send_data
+import ipaddress
 
 class Host_Movel(Thread):
 
@@ -34,13 +37,25 @@ class Host_Movel(Thread):
 
     def listen(self):
         # abre porta 6666
-        self.sock.bind(('', self.mcast_port))
+        #self.sock.bind(('', self.mcast_port))
+        mc_address = ipaddress.IPv6Address('ff02::abcd:1')
+        listen_port = 6666
+        interface_index = socket.if_nametoindex('eth0')
+        self.sock.bind((str(mc_address), listen_port, 0, interface_index))
 
         # Join Multicast Group
         #member_request = struct.pack("16s15s".encode('utf-8'), socket.inet_pton(socket.AF_INET6, self.mcast_group), (chr(0) * 16).encode('utf-8'))
+        self.sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_MULTICAST_LOOP, False)
         member_request = struct.pack("16sI".encode('utf-8'), socket.inet_pton(socket.AF_INET6, self.mcast_group), socket.INADDR_ANY)
         self.sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_JOIN_GROUP, member_request)
 
+    def send_data(self,msg):
+        send_data.send(msg, self.mcast_group, self.mcast_port)
+        print(f'message of type {msg["type"]} sent to ({self.mcast_group},{self.mcast_port})')
+
+    def hello_handler(self,msg):
+        test_print = msg['type'] + " from: " + msg['source']
+        print(test_print)
 
     def receive(self):
 
@@ -48,11 +63,30 @@ class Host_Movel(Thread):
 
         while True:
 
-            rcv_msg = self.sock.recvfrom(1024)
+            data, addr = self.sock.recvfrom(1024)
 
-            receive_handler = Receive_Handler(self.lock, rcv_msg, self.local_ip, self.mcast_group, self.mcast_port)
+            rcv_msg = json.loads(data.decode('utf-8'))
 
-            receive_handler.start()
+            print(f'Message of type {rcv_msg["type"]} received from {addr}')
+
+            #receive_handler = Receive_Handler(self.lock, rcv_msg, self.local_ip, self.mcast_group, self.mcast_port)
+
+            #receive_handler.start()
+
+            try:
+                self.lock.acquire()
+                if rcv_msg["type"] == "Request" and rcv_msg["source"] != self.local_ip:
+                    self.send_data(rcv_msg)
+
+                elif rcv_msg["type"] == "Reply":
+                    if rcv_msg["destination"]!= self.local_ip:
+                        self.send_data(rcv_msg)
+                        print("recebi do servidor")
+                    else:
+                        print('Mensagem para mim')
+
+            finally:
+                self.lock.release()
 
 
 

@@ -50,7 +50,9 @@ class HelloSender(Thread):
                 # Messagem a ser enviada
             self.msg = {
                 "type": "Request",
-                "source": self.localhost
+                "source": self.localhost,
+                "destination" : "2001:0::10",
+                "data" : (0,0)
             }
 
                 #print('Sending multicast message to the multicast group ...')
