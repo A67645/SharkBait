@@ -5,12 +5,12 @@ import time
 import unicast.ifaces as ifaces
 
 class Server():
-    
+
     sock = None
 
     def __init__(self):
         self.sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
-        host,port = ('::1', 7777) # '2001:0::10'
+        host,port = ('', 7777) # '2001:0::10'
         self.sock.bind((host,port))
 
     def send(self,addr, message):
@@ -23,9 +23,9 @@ class Server():
 
             msg = json.loads(message)
 
-            msg['type'] = 'Reply'
-
             print("received message from host" + msg['source'])
+
+            msg['type'] = 'Reply'
 
             message = json.dumps(msg)
 
